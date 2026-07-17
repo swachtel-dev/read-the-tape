@@ -1,0 +1,898 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Read the Tape — Financial Markets and Institutions</title>
+</head>
+<body>
+<style>
+  :root{
+    --ground:#f4f6f9;--surface:#fff;--surface-2:#eef2f6;--border:#dae1ea;
+    --ink:#1a2230;--muted:#586274;--faint:#8b95a4;--accent:#0f5a72;--accent-br:#0b7ea0;
+    --up:#2b8a5b;--up-bg:#e3f2e9;--down:#b8433a;--down-bg:#f7e2df;--gold:#a9720c;--gold-bg:#f8eed6;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;
+    --mono:"SF Mono","JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+    --shadow:0 1px 2px rgba(20,30,50,.06),0 4px 16px rgba(20,30,50,.05);
+  }
+  @media(prefers-color-scheme:dark){:root{
+    --ground:#0e1319;--surface:#161d26;--surface-2:#1e2732;--border:#2a3542;--ink:#e7ecf3;--muted:#a3adbb;--faint:#6d7887;
+    --accent:#43a7c4;--accent-br:#5cc0da;--up:#4fb37e;--up-bg:#16301f;--down:#e0685e;--down-bg:#361c19;--gold:#d29a3a;--gold-bg:#33280f;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.35);}}
+  :root[data-theme="light"]{--ground:#f4f6f9;--surface:#fff;--surface-2:#eef2f6;--border:#dae1ea;--ink:#1a2230;--muted:#586274;--faint:#8b95a4;--accent:#0f5a72;--accent-br:#0b7ea0;--up:#2b8a5b;--up-bg:#e3f2e9;--down:#b8433a;--down-bg:#f7e2df;--gold:#a9720c;--gold-bg:#f8eed6;--shadow:0 1px 2px rgba(20,30,50,.06),0 4px 16px rgba(20,30,50,.05);}
+  :root[data-theme="dark"]{--ground:#0e1319;--surface:#161d26;--surface-2:#1e2732;--border:#2a3542;--ink:#e7ecf3;--muted:#a3adbb;--faint:#6d7887;--accent:#43a7c4;--accent-br:#5cc0da;--up:#4fb37e;--up-bg:#16301f;--down:#e0685e;--down-bg:#361c19;--gold:#d29a3a;--gold-bg:#33280f;--shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.35);}
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:820px;margin:0 auto;padding:28px 18px 60px;}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 6px;}
+  h1{font-family:var(--serif);font-weight:600;font-size:27px;margin:0 0 4px;letter-spacing:-.01em;}
+  .sub{color:var(--muted);font-size:14.5px;margin:0;}
+  .progress{display:flex;gap:6px;margin:18px 0 8px;}
+  .pip{flex:1;height:6px;border-radius:3px;background:var(--border);}
+  .pip.done{background:var(--up);} .pip.now{background:var(--accent-br);}
+  .scorebar{display:flex;justify-content:space-between;gap:14px;font-family:var(--mono);font-size:12px;color:var(--muted);margin-bottom:6px;flex-wrap:wrap;}
+  .scorebar b{color:var(--ink);font-variant-numeric:tabular-nums;}
+  .scorebar .pnl-pos b{color:var(--up);} .scorebar .pnl-neg b{color:var(--down);}
+  .panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;margin:14px 0;}
+  .panel h2{font-family:var(--sans);font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 12px;font-weight:600;}
+  .introbody p{font-size:15px;margin:11px 0;} .introbody p:first-child{margin-top:0;}
+  .plainbox{font-size:14.5px;background:var(--surface-2);border-radius:8px;padding:12px 14px;margin:2px 0 12px;border-left:3px solid var(--accent-br);}
+  .plainbox b{color:var(--accent-br);}
+  .kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-br);margin:0 0 6px;}
+  .headline{font-family:var(--serif);font-size:22px;font-weight:600;margin:0 0 4px;line-height:1.25;}
+  .ticker{font-family:var(--mono);font-size:13px;color:var(--muted);margin:0 0 12px;}
+  .ticker b{color:var(--ink);}
+  .facts{list-style:none;margin:0 0 10px;padding:0;}
+  .facts li{position:relative;font-size:13.5px;padding:7px 11px 7px 27px;background:var(--surface-2);border-radius:8px;margin:6px 0;line-height:1.45;}
+  .facts li::before{content:"";position:absolute;left:11px;top:14px;width:6px;height:6px;border-radius:50%;background:var(--accent-br);}
+  .position{font-size:13.5px;background:var(--gold-bg);border-radius:8px;padding:10px 13px;margin:0 0 12px;color:var(--ink);}
+  .position b{color:var(--gold);}
+  .signal{font-size:13.5px;background:var(--surface-2);border-radius:8px;padding:11px 14px;margin:0 0 12px;border-left:3px solid var(--gold);}
+  .signal b{color:var(--gold);}
+  .goal{font-size:14px;background:var(--gold-bg);border-radius:8px;padding:11px 14px;margin:0 0 14px;color:var(--ink);}
+  .goal b{color:var(--gold);}
+  .tutorial{font-size:12.5px;background:var(--gold-bg);border-radius:8px;padding:10px 12px;margin:12px 0 0;border-left:3px solid var(--gold);line-height:1.5;}
+  .tutorial .th{font-weight:700;color:var(--gold);display:block;margin-bottom:4px;}
+  .tutorial ol{margin:8px 0 0;padding-left:20px;} .tutorial li{margin:6px 0;}
+  .explain{margin:16px 0 14px;border:1px solid var(--border);border-radius:9px;background:var(--surface-2);overflow:hidden;max-width:680px;}
+  .explain summary{cursor:pointer;font-size:13px;font-weight:600;padding:11px 14px;color:var(--accent-br);list-style:none;}
+  .explain summary::-webkit-details-marker{display:none;}
+  .explain summary::before{content:"?  ";font-family:var(--mono);}
+  .explain[open] summary{border-bottom:1px solid var(--border);}
+  .explain summary:focus-visible{outline:2px solid var(--accent-br);outline-offset:-2px;}
+  .explain .ebody{padding:6px 15px 13px;font-size:13px;}
+  .explain dl{margin:0;} .explain dt{font-weight:600;margin-top:10px;color:var(--ink);}
+  .explain dd{margin:2px 0 0;color:var(--muted);line-height:1.5;}
+  .steplabel{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;font-weight:600;}
+  .sceneGrid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:12px;}
+  @media(min-width:768px){.sceneGrid{grid-template-columns:1.25fr .95fr;align-items:start;}.decisionCol{position:sticky;top:14px;}}
+  .decisionCard{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:15px 16px;}
+  .decisionCard .actions{margin-top:14px;}
+  .actionrow{display:grid;grid-template-columns:1fr;gap:9px;margin:2px 0 4px;}
+  .act{text-align:left;font-family:var(--sans);padding:13px 14px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface-2);color:var(--ink);cursor:pointer;transition:transform .1s ease;}
+  .act:hover:not(:disabled){border-color:var(--accent-br);}
+  .act:disabled{opacity:.5;cursor:default;}
+  .act .al{display:block;font-size:15px;font-weight:700;}
+  .act .as{display:block;font-size:12px;color:var(--muted);margin-top:3px;line-height:1.35;}
+  .act.sel{border-color:var(--accent-br);background:var(--surface);box-shadow:0 0 0 3px rgba(11,126,160,.18);}
+  .act:focus-visible{outline:2px solid var(--accent-br);outline-offset:2px;}
+  .conv{display:flex;align-items:center;gap:10px;margin:14px 0 2px;flex-wrap:wrap;}
+  .conv .cl{font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);}
+  .conv .cbtns{display:inline-flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .conv button{font-family:var(--sans);font-size:13px;font-weight:600;padding:8px 15px;border:none;background:var(--surface-2);color:var(--muted);cursor:pointer;}
+  .conv button.on{background:var(--accent-br);color:#fff;}
+  .conv button:focus-visible{outline:2px solid var(--accent-br);outline-offset:-1px;position:relative;z-index:1;}
+  .conv.muted{opacity:.45;pointer-events:none;}
+  .conv .cnote{font-size:12px;color:var(--faint);}
+  .yourcall{font-size:13.5px;background:var(--surface);border:1px dashed var(--border);border-radius:8px;padding:11px 14px;margin:14px 0 0;min-height:20px;}
+  .yourcall b{color:var(--accent-br);}
+  .yourcall.empty{color:var(--faint);font-style:italic;}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;align-items:center;}
+  button.go{font-family:var(--sans);font-size:14px;font-weight:600;padding:11px 20px;border-radius:9px;border:none;background:var(--accent-br);color:#fff;cursor:pointer;}
+  button.go:hover:not(:disabled){filter:brightness(1.08);} button.go:disabled{opacity:.45;cursor:default;}
+  .go.needs-mcq{opacity:.5;cursor:not-allowed;} .go.needs-mcq:hover{filter:none;}
+  .mcqhint{font-size:12.5px;color:var(--muted);align-self:center;}
+  button.ghost{font-family:var(--sans);font-size:13px;padding:10px 15px;border-radius:9px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;}
+  button:focus-visible{outline:2px solid var(--accent-br);outline-offset:2px;}
+  .chartwrap{margin:16px 0 2px;}
+  .charthd{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:8px;flex-wrap:wrap;}
+  .charthd .cl{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);}
+  .charthd .cv{font-family:var(--serif);font-size:21px;font-weight:600;font-variant-numeric:tabular-nums;margin-top:2px;}
+  .charthd .cv.up{color:var(--up);} .charthd .cv.down{color:var(--down);}
+  .chartbox{background:var(--surface-2);border-radius:10px;padding:12px;}
+  svg.chart{display:block;width:100%;height:auto;}
+  .chart .base{stroke:var(--faint);stroke-width:1;stroke-dasharray:3 3;opacity:.6;}
+  .chart .pl{fill:none;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round;}
+  .chart .dot{stroke:var(--surface);stroke-width:2;}
+  .chart .dlabel{font-family:var(--mono);font-size:8px;fill:var(--faint);}
+  .result{border-radius:10px;padding:16px 18px;margin:0;}
+  .result.win{background:var(--up-bg);} .result.lose{background:var(--down-bg);} .result.safe{background:var(--up-bg);} .result.miss{background:var(--gold-bg);}
+  .result .rtitle{font-family:var(--serif);font-size:19px;font-weight:600;margin:0 0 4px;}
+  .result.win .rtitle,.result.safe .rtitle{color:var(--up);} .result.lose .rtitle{color:var(--down);} .result.miss .rtitle{color:var(--gold);}
+  .result .rpnl{font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums;margin:0 0 8px;}
+  .why{background:var(--surface);border-radius:8px;padding:12px 14px;margin-top:10px;font-size:13.5px;line-height:1.55;border-left:3px solid var(--accent);}
+  .why .wt{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-br);display:block;margin-bottom:5px;}
+  .coach{background:var(--surface);border-radius:8px;padding:12px 14px;margin-top:10px;font-size:13.5px;border-left:3px solid var(--gold);}
+  .coach b{color:var(--gold);}
+  .mcq{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 15px;margin-top:12px;}
+  .mcqq{font-size:13.5px;font-weight:600;margin-bottom:9px;}
+  .mcqq .qk{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-br);display:block;margin-bottom:3px;}
+  .mcqops{display:flex;flex-direction:column;gap:7px;}
+  .mcqop{text-align:left;font-family:var(--sans);font-size:13px;padding:9px 12px;border:1px solid var(--border);border-radius:8px;background:var(--surface-2);color:var(--ink);cursor:pointer;}
+  .mcqop:hover:not(:disabled){border-color:var(--accent-br);}
+  .mcqop:disabled{cursor:default;}
+  .mcqop.correct{background:var(--up-bg);border-color:var(--up);color:var(--up);font-weight:600;}
+  .mcqop.wrong{background:var(--down-bg);border-color:var(--down);color:var(--down);}
+  .mcqop:focus-visible{outline:2px solid var(--accent-br);outline-offset:2px;}
+  .mcqfb{font-size:12.5px;margin-top:9px;line-height:1.5;}
+  .mcqfb.ok{color:var(--up);} .mcqfb.no{color:var(--down);} .mcqfb b{color:inherit;}
+  @keyframes flashpulse{0%,100%{box-shadow:0 0 0 0 rgba(11,126,160,0);}50%{box-shadow:0 0 0 3px var(--accent-br);}}
+  .mcq.flash{border-color:var(--accent-br);} .mcq.flash .mcqop{animation:flashpulse .35s ease 2;}
+  .note{font-size:12px;color:var(--faint);margin-top:12px;line-height:1.5;}
+  .act[data-a="buy"] .al,.act[data-a="hold"] .al{color:var(--up);}
+  .act[data-a="short"] .al{color:var(--down);}
+  .act[data-a="sell"] .al{color:var(--gold);}
+  .newsfeed{margin:12px 0 0;display:flex;flex-direction:column;gap:6px;}
+  .newsfeed .nhh{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 1px;}
+  .newsfeed .nh{font-size:12.5px;background:var(--surface-2);border-radius:7px;padding:7px 11px;border-left:2px solid var(--accent-br);line-height:1.42;color:var(--ink);}
+  .newsfeed .nh .nd{font-family:var(--mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--faint);margin-right:8px;}
+  .resultInline{margin-top:16px;}
+  .hidden{display:none;}
+  .term{border-bottom:1px dotted var(--faint);cursor:help;}
+  .term:hover{border-bottom-color:var(--accent-br);}
+  .term:focus-visible{outline:2px solid var(--accent-br);outline-offset:2px;border-radius:2px;}
+  #glossTip{position:absolute;z-index:9999;max-width:262px;background:var(--ink);color:var(--surface);font-family:var(--sans);font-size:12.5px;line-height:1.45;padding:9px 12px;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.28);opacity:0;transform:translateY(3px);pointer-events:none;transition:transform .12s ease;left:0;top:0;}
+  #glossTip.show{opacity:1;transform:translateY(0);}
+  .done-recap{font-family:var(--serif);font-size:18px;line-height:1.5;margin:4px 0 14px;}
+  .done-stat{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 14px;}
+  .done-stat .s{flex:1;min-width:150px;background:var(--surface-2);border-radius:9px;padding:12px 14px;}
+  .done-stat .s .l{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);}
+  .done-stat .s .v{font-family:var(--serif);font-size:22px;font-weight:600;margin-top:4px;}
+  .card-list{list-style:none;margin:0 0 6px;padding:0;}
+  .card-list li{display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:8px 0;border-bottom:1px solid var(--border);}
+  .card-list li .cn{color:var(--muted);} .card-list li .cn b{color:var(--ink);}
+  .card-list .rr{font-family:var(--mono);font-variant-numeric:tabular-nums;}
+  .card-list .rr.good{color:var(--up);} .card-list .rr.bad{color:var(--down);}
+  @media(max-width:560px){h1{font-size:22px;}.headline{font-size:19px;}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;}}
+</style>
+
+<div class="wrap">
+  <p class="eyebrow">FINAN III &middot; Unit 7 &middot; Trading Game</p>
+  <h1>Read the Tape</h1>
+  <p class="sub">Eight real-world situations from the stock market. Read each one, make a clear call, and watch the price play out. The tape rewards traders who see who is forced to trade and who is out of ammunition, and it will fool you when you get lazy.</p>
+  <div class="progress" id="progress"></div>
+  <div class="scorebar">
+    <span>Round <b id="rnum">1</b> of <b id="rtot">6</b></span>
+    <span>Correct reads: <b id="reads">0</b></span>
+    <span id="pnlWrap">P&amp;L: <b id="score">$0</b></span>
+  </div>
+
+  <div class="panel" id="welcomePanel">
+    <h2>Start here</h2>
+    <div class="introbody">
+      <p>A stock's price is not handed down from on high. It is the running result of a tug-of-war: at any instant, the price is wherever buyers and sellers agree to trade. That constant negotiation has a name, price discovery, and it is what this game is about.</p>
+      <p>Here is the one idea underneath every round: a price moves most when someone is forced to trade or the eager crowd runs out. A trader who bet against a stock may be forced to buy it back. An index fund may be forced to buy a stock the day it joins the index. A crowd that already piled in has no one left to sell to. Read who must trade and who is spent, and you can often tell which way the price breaks, whatever the headline says.</p>
+      <p>Each round drops you into a concrete situation with a few plain facts. You make one clear call, then the price plays out over the next few days and you see why it moved. No finance background needed. Every new term is explained the first time it appears, so hover, tap, or keyboard-focus any word with a dotted underline. Try it now on price discovery and short squeeze, two ideas you will use right away.</p>
+    </div>
+    <div class="actions"><button class="go" id="startGame">I am ready, deal me in</button></div>
+  </div>
+
+  <div class="panel hidden" id="scenePanel">
+    <p class="kicker" id="kicker"></p>
+    <div class="headline" id="headline"></div>
+    <p class="ticker" id="tickerLine"></p>
+    <div class="sceneGrid">
+      <div class="situationCol">
+        <div class="chartwrap hidden" id="chartwrap">
+          <div class="charthd">
+            <div><div class="cl" id="chartTitle">The stock over the next 5 days</div><div class="cv" id="priceNow">100</div></div>
+            <div style="text-align:right"><div class="cl">Your P&amp;L</div><div class="cv" id="pnlNow">$0</div></div>
+          </div>
+          <div class="chartbox">
+            <svg class="chart" id="chart" viewBox="0 0 320 130" preserveAspectRatio="none" role="img" aria-label="Price path over five days"></svg>
+          </div>
+        </div>
+        <div class="newsfeed hidden" id="newsfeed"></div>
+        <ul class="facts" id="facts"></ul>
+        <div class="position" id="position"></div>
+        <div class="signal" id="signal"></div>
+      </div>
+      <div class="decisionCol">
+        <div class="decisionCard">
+          <p class="steplabel">Your call &mdash; pick one</p>
+          <div class="actionrow" id="actionrow"></div>
+          <div class="conv" id="conv">
+            <span class="cl">Conviction</span>
+            <span class="cbtns">
+              <button type="button" id="convSmall" class="on">Small</button>
+              <button type="button" id="convBig">Big</button>
+            </span>
+            <span class="cnote" id="convNote">$10,000 at risk</span>
+          </div>
+          <div class="yourcall empty" id="yourcall">Pick an action to see the trade-off.</div>
+          <div class="tutorial hidden" id="tutorial"></div>
+          <div class="actions">
+            <button class="go" id="lockIn" disabled>Lock in the call</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <details class="explain" id="explain">
+      <summary>What am I looking at? Every part, in plain words</summary>
+      <div class="ebody"><dl>
+        <dt>The headline and facts</dt><dd>A real-world situation from the stock market. The facts are the clues that tell you which way pressure is building. Read them for who is forced to trade and who is out of ammunition.</dd>
+        <dt>Your position</dt><dd>What you already own going into the round. Usually you start flat, meaning you hold none of the stock. In one round you start holding a big winner and must decide what to do with it.</dd>
+        <dt>The tape</dt><dd>A one-line read of what the buying and selling look like right now. On a real desk, watching the tape means watching orders flow past in real time.</dd>
+        <dt>Your call</dt><dd>Pick one action. Buy bets the price rises. Short bets it falls. Sit out risks nothing. When you hold a position you can Hold, Sell, or Short instead.</dd>
+        <dt>Conviction (size)</dt><dd>How much money you put behind a directional call. Big doubles the swing, up or down. It only matters when you take a real position, and going big is not always smart.</dd>
+        <dt>Lock in the call</dt><dd>Commits your decision and reveals the next five days of trading. You cannot change your mind once the tape starts printing.</dd>
+      </dl></div>
+    </details>
+    <div class="resultInline hidden" id="resultInline">
+      <div class="result" id="resultBox">
+        <div class="rtitle" id="rtitle"></div>
+        <div class="rpnl" id="rpnl"></div>
+        <div class="why" id="why"></div>
+        <div class="coach" id="coach"></div>
+      </div>
+      <div id="mcqWrap"></div>
+      <div class="actions" id="resultActions"></div>
+    </div>
+  </div>
+
+  <div class="panel hidden" id="donePanel">
+    <h2>Market closed</h2>
+    <p style="font-size:14px;margin:0 0 6px">Your rank</p>
+    <div class="done-recap" id="rank"></div>
+    <div class="done-stat">
+      <div class="s"><div class="l">Correct reads</div><div class="v" id="doneReads"></div></div>
+      <div class="s"><div class="l">Total P&amp;L</div><div class="v" id="donePnl"></div></div>
+    </div>
+    <ul class="card-list" id="scorecard"></ul>
+    <div class="why" style="margin-top:14px"><span class="wt">The one big idea</span>A stock's price is set by who must trade and who is exhausted. Forced buyers, shorts covering, index funds buying, panicked sellers, move price far more than the headline does. Read who is trapped, who is spent, and who is coming next, and the tape usually tells you which way it breaks.</div>
+    <div class="actions"><button class="go" id="playAgain">Play again</button></div>
+  </div>
+
+  <p class="note">A practice game for FINAN III, Unit 7. Nothing here is real money or investment advice. The situations are simplified to teach how market structure moves prices.</p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  function $(id){return document.getElementById(id);}
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ---------- glossary ----------
+  var GLOSS={
+    "short interest":"The share of a company's tradable stock that traders have borrowed and sold, betting the price will fall.",
+    "short squeeze":"When a rising price forces the traders betting against a stock to buy it back fast, pushing the price up even more.",
+    "short covering":"Traders who bet against a stock buying it back to close the bet. That buying adds to upward pressure.",
+    "float":"The number of shares actually available for the public to trade, once you set aside those locked up by insiders.",
+    "high-frequency trading":"Computer programs that trade in millionths of a second, reacting to orders far faster than any human can.",
+    "front-running":"Jumping ahead of a big order you can see coming, buying first so you profit when that order pushes the price.",
+    "front-ran":"Jumped ahead of your order, buying first, so the price moved against you before your order filled.",
+    "index rebalancing":"When a stock index updates which companies it holds, forcing the funds that track it to buy or sell.",
+    "passive flows":"Money from index funds that must buy or sell a stock simply because it is in the index, regardless of price.",
+    "price discovery":"The tug-of-war of buyers and sellers that settles on what a stock is worth right now.",
+    "liquidity":"How easily you can buy or sell without moving the price. Thinly traded stocks have very little of it.",
+    "overreaction":"When a stock moves further than the news justifies, because the crowd piles in or panics.",
+    "catalyst":"A piece of news or an event that suddenly gives traders a reason to buy or sell.",
+    "slippage":"The gap between the price you expected and the worse price you actually get when your order is too big for the market.",
+    "market order":"An order to buy or sell right now at whatever price is available. Fast, but you take whatever fill you get.",
+    "limit order":"An order that fills only at a price you set or better. Patient, but it may never fill.",
+    "lockup":"A stretch after a company goes public when insiders are barred from selling their shares.",
+    "redeemed":"SPAC investors took their cash back before the merger, draining the money the deal was supposed to have.",
+    "whisper number":"The unofficial result traders quietly expect, often higher than the published estimate.",
+    "priced in":"Already reflected in the stock price because everyone expected it, so the news itself moves nothing.",
+    "guidance":"A company's own forecast for its future results, which often moves the stock more than the results just reported.",
+    "parabolic":"Rising so fast that the price chart bends almost straight up, a classic sign of a crowded, late-stage move.",
+    "SPAC":"A shell company that raises cash by going public, then merges with a real business to take it public without a normal IPO.",
+    "PIPE investors":"Big investors who put money into a SPAC deal on special terms and often sell once they are allowed to.",
+    "go long":"To buy a stock so that you profit if the price rises.",
+    "unrealized gain":"A profit on paper. It is not yours for keeps until you sell and lock it in."
+  };
+  function escRe(s){return s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");}
+  var GKEYS=Object.keys(GLOSS).sort(function(a,b){return b.length-a.length;});
+  function glossify(root){
+    if(!root)return;var used={};
+    var nodes=[],w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null,false),n;
+    while(n=w.nextNode()){if(n.parentNode&&n.parentNode.closest&&n.parentNode.closest(".term"))continue;if(n.nodeValue&&n.nodeValue.trim())nodes.push(n);}
+    nodes.forEach(function(node){
+      var cur=node;
+      while(cur&&cur.nodeValue){
+        var best=null;
+        GKEYS.forEach(function(term){
+          if(used[term])return;
+          var m=new RegExp("\\b"+escRe(term)+"\\b","i").exec(cur.nodeValue);
+          if(m&&(!best||m.index<best.idx))best={idx:m.index,matched:m[0],term:term};
+        });
+        if(!best)break;
+        var after=cur.splitText(best.idx),rest=after.splitText(best.matched.length);
+        var span=document.createElement("span");
+        span.className="term";span.tabIndex=0;span.setAttribute("role","button");
+        span.setAttribute("data-def",GLOSS[best.term]);
+        span.setAttribute("aria-label",best.matched+", definition: "+GLOSS[best.term]);
+        span.textContent=best.matched;
+        after.parentNode.replaceChild(span,after);
+        used[best.term]=true;cur=rest;
+      }
+    });
+  }
+  // ---- custom tooltip: mouse, keyboard, and touch. Visibility is instant via a class, not gated on rAF or an opacity transition. ----
+  var tip=document.createElement("div");tip.id="glossTip";tip.setAttribute("role","tooltip");
+  document.body.appendChild(tip);
+  var tipFor=null;
+  function positionTip(el){
+    var r=el.getBoundingClientRect();
+    tip.style.left="0px";tip.style.top="0px";
+    var tr=tip.getBoundingClientRect();
+    var vw=document.documentElement.clientWidth;
+    var left=r.left+window.scrollX+(r.width/2)-(tr.width/2);
+    var top=r.top+window.scrollY-tr.height-9;
+    left=Math.max(window.scrollX+8,Math.min(left,window.scrollX+vw-tr.width-8));
+    if(r.top-tr.height-9<0)top=r.bottom+window.scrollY+9;
+    tip.style.left=Math.round(left)+"px";tip.style.top=Math.round(top)+"px";
+  }
+  function showTip(el){var def=el.getAttribute("data-def");if(!def)return;tip.textContent=def;tip.classList.add("show");tipFor=el;positionTip(el);}
+  function hideTip(){tip.classList.remove("show");tipFor=null;}
+  function closestTerm(t){return t&&t.closest?t.closest(".term"):null;}
+  document.addEventListener("mouseover",function(e){var t=closestTerm(e.target);if(t)showTip(t);});
+  document.addEventListener("mouseout",function(e){var t=closestTerm(e.target);if(t&&(!e.relatedTarget||!t.contains(e.relatedTarget))&&tipFor===t)hideTip();});
+  document.addEventListener("focusin",function(e){var t=closestTerm(e.target);if(t)showTip(t);});
+  document.addEventListener("focusout",function(e){var t=closestTerm(e.target);if(t&&tipFor===t)hideTip();});
+  document.addEventListener("click",function(e){var t=closestTerm(e.target);if(t){if(tipFor===t)hideTip();else showTip(t);}else if(tipFor)hideTip();});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&tipFor)hideTip();else if((e.key==="Enter"||e.key===" ")){var t=closestTerm(e.target);if(t){e.preventDefault();if(tipFor===t)hideTip();else showTip(t);}}});
+  window.addEventListener("scroll",function(){if(tipFor)positionTip(tipFor);},true);
+  window.addEventListener("resize",function(){if(tipFor)positionTip(tipFor);});
+
+  // ---------- economics engine (kept separate from presentation) ----------
+  var SMALL=10000, BIG=20000;
+  // ret(round) is derived from the price path so the number and the chart cannot disagree.
+  function retOf(rd){return rd.path[rd.path.length-1]/100 - 1;}
+  // Mark-to-market P&L for the chosen action at a given price index (100 = entry).
+  function mtm(rd, action, big, priceIdx){
+    if(action==="sit"||action==="sell")return 0;   // flat, no market exposure from here
+    var notional = big?BIG:SMALL;
+    var r = priceIdx/100 - 1;
+    if(action==="short")return -r*notional;
+    // long side: "buy" or "hold"
+    if(rd.slippage && action==="buy"){
+      var slip = big ? rd.slippage.big : rd.slippage.small;
+      return (r - slip)*notional;
+    }
+    return r*notional;
+  }
+  function settledPnl(rd, action, big){return mtm(rd, action, big, rd.path[rd.path.length-1]);}
+  // Was this the right read?
+  function isRight(rd, action, big){
+    if(rd.key==="hft")return action==="buy" && big===false; // right stock, right size
+    return rd.best.indexOf(action)!==-1;
+  }
+  function statusOf(rd, action, big){
+    var p=settledPnl(rd,action,big), right=isRight(rd,action,big);
+    if(p>0.5)return "win";
+    if(p<-0.5)return "lose";
+    return right?"safe":"miss";  // flat outcomes: disciplined vs money left on the table
+  }
+
+  // ---------- rounds ----------
+  var A_BUY={key:"buy",label:"Buy",sub:"Bet it rises (go long)"};
+  var A_SHORT={key:"short",label:"Short",sub:"Bet it falls"};
+  var A_SIT={key:"sit",label:"Sit out",sub:"No position, just watch"};
+  var A_HOLD={key:"hold",label:"Hold",sub:"Keep the position, ride it"};
+  var A_SELL={key:"sell",label:"Sell",sub:"Take the profit, step aside"};
+
+  var CALLTEXT={
+    buy:"You profit if the price rises and lose if it falls. Bigger size means a bigger swing either way.",
+    short:"You profit if the price falls. But a short can lose more than you put in if the stock rips higher instead.",
+    sit:"You risk nothing and gain nothing. When the setup is a trap, no trade is the winning trade.",
+    hold:"You keep full exposure. Great if it climbs from here, painful if it turns over.",
+    sell:"You lock in what you have and give up any further upside. This is choosing safety over greed."
+  };
+
+  var ROUNDS=[
+    {
+      key:"squeeze",
+      tag:"Guided",
+      kicker:"Round 1 of 6 &middot; Guided",
+      headline:"A heavily shorted stock catches fire",
+      ticker:"GMX &middot; last <b>$18.40</b> &middot; up 9% pre-market",
+      facts:[
+        "Short interest is 140% of the float. More shares have been borrowed and sold short than actually exist to trade freely.",
+        "A well-known investor just posted a bullish case for GMX overnight. A catalyst has hit.",
+        "The stock is up 9% before the open on huge volume, and it keeps ticking higher."
+      ],
+      position:"<b>Your position:</b> flat. You own none of GMX yet.",
+      signal:"<b>The tape:</b> relentless buying, and the traders who are short are trapped with no cheap way out.",
+      goal:"<b>Goal:</b> turn a profit. This setup is a coiled spring.",
+      tutorial:"<span class=\"th\">New here? Suggested first move.</span>140% short interest plus a fresh catalyst is the classic short squeeze setup: as the price rises, the shorts are forced to buy back, which drives it higher. Try <b>Buy</b>, set conviction to <b>Big</b>, and lock it in.",
+      actions:[A_BUY,A_SHORT,A_SIT],
+      path:[100,109,119,128,132,135],
+      news:["GMX gaps up hard at the open; short borrow fees spike.","Shorts scramble to cover, and the buying feeds on itself.","Halted twice for volatility as retail piles in.","The squeeze cools but holds most of the gains.","GMX closes up about 35%, its biggest day in a year."],
+      best:["buy"],
+      why:"The squeeze fired. With 140% of the float sold short and a catalyst in hand, the rising price forced short sellers to buy GMX back to cap their losses. That buying pushed the price higher, which forced still more short covering. Buying begat buying. High short interest plus a catalyst is a coiled spring, and here it uncoiled upward.",
+      rightMsg:"You bought the coiled spring and rode the squeeze up.",
+      wrongMsg:function(a){return a==="short"?"You shorted a stock with 140% short interest into a fresh catalyst. That is exactly the setup that runs shorts over.":"You sat out the cleanest squeeze setup in the game and left the gains on the table.";},
+      mcq:{q:"A short squeeze needs fuel. Which setup is most likely to squeeze upward?",
+        options:[
+          {t:"High short interest, say 130% of the float, plus a fresh catalyst.",correct:true},
+          {t:"Low short interest and no news at all.",correct:false},
+          {t:"A giant, easy-to-trade stock that almost nobody is betting against.",correct:false}],
+        ok:"Right. Lots of shorts plus a reason to buy means shorts must scramble to cover, and their own buying feeds the spike.",
+        no:"The fuel is short interest. When many traders are short and a catalyst hits, they are forced to buy the stock back, and that covering drives the price up."}
+    },
+    {
+      key:"index",
+      kicker:"Round 2 of 6",
+      headline:"A mid-cap gets added to a major index",
+      ticker:"NVLT &middot; last <b>$52.10</b>",
+      facts:[
+        "NVLT will be added to a major stock index a week from Friday.",
+        "Every index fund that tracks that index must buy NVLT to match it, no matter the price. That is a wave of passive flows coming.",
+        "The stock ticked up on the announcement and daily volume is climbing."
+      ],
+      position:"<b>Your position:</b> flat. You own none of NVLT.",
+      signal:"<b>The tape:</b> steady, price-blind buying is starting to build ahead of the inclusion date.",
+      goal:"<b>Goal:</b> get on the right side of forced buying.",
+      actions:[A_BUY,A_SHORT,A_SIT],
+      path:[100,102,104,106,108,109],
+      news:["Funds quietly start building NVLT ahead of the inclusion date.","Daily volume climbs on steady, price-blind buying.","More index trackers begin matching the new weighting.","Inclusion day: passive funds finish their buying.","NVLT drifts up about 9% on the flow, with no real news."],
+      best:["buy"],
+      why:"Passive flows did the work. Once a stock joins a major index, every fund that tracks that index has to buy it during index rebalancing, regardless of what it costs. Traders who saw that forced buying coming bought ahead of it, so the price drifted up into the inclusion date. This is flow, not fundamentals. Nothing changed about the business, only who was now obligated to own the shares.",
+      rightMsg:"You front-ran the forced index buying and rode the passive flows up.",
+      wrongMsg:function(a){return a==="short"?"You bet against a wall of price-blind index buying. Fighting forced flows is a hard way to make money.":"You sat out a slow, fairly reliable edge. The forced buyers were always going to lift it.";},
+      mcq:null
+    },
+    {
+      key:"earn",
+      kicker:"Round 3 of 6",
+      headline:"The company beats earnings, and you must decide fast",
+      ticker:"BLZR &middot; last <b>$210</b> &middot; earnings just released",
+      facts:[
+        "BLZR just reported a quarter that beat the official analyst estimate.",
+        "But the stock is already up 60% this quarter, and the whisper number was well above the official estimate.",
+        "Management's guidance for next quarter came in soft."
+      ],
+      position:"<b>Your position:</b> flat. The headline says beat. The question is what the price already assumes.",
+      signal:"<b>The tape:</b> a quick pop at the open, then sellers leaning on every bounce.",
+      goal:"<b>Goal:</b> do not get suckered by a bullish headline. Protect your capital.",
+      actions:[A_BUY,A_SHORT,A_SIT],
+      path:[100,101,96,92,89,88],
+      news:["BLZR pops at the open on the headline beat.","The rally fades fast; sellers lean on every bounce.","Desks flag the soft guidance as the real story.","Profit-taking accelerates after the big run.","BLZR ends down about 12% despite beating the estimate."],
+      best:["short","sit"],
+      why:"Classic buy the rumor, sell the news. BLZR had already run 60% and the whisper number was higher than the official estimate, so a merely good result was a letdown. The good news was priced in before it was announced, and the soft guidance gave holders a reason to sell. This is overreaction cutting the other way: the crowd had front-loaded all the optimism, so there was no one left to buy and plenty of profit-takers ready to sell.",
+      rightMsg:"You saw the beat was already priced in and either faded it or stepped aside. That is disciplined tape reading.",
+      wrongMsg:function(a){return "You bought a beat that everyone already expected. With the good news priced in and guidance soft, there was no one left to buy it higher.";},
+      mcq:{q:"BLZR beat the official estimate, yet the stock fell. Best explanation?",
+        options:[
+          {t:"The beat was already priced in. Expectations, including the whisper number, were even higher, so the result disappointed.",correct:true},
+          {t:"Beating estimates always makes a stock fall.",correct:false},
+          {t:"Earnings never affect a stock's price.",correct:false}],
+        ok:"Right. Price reflects expectations. If the crowd already expected a blowout, an ordinary beat is a letdown.",
+        no:"Price already reflects what people expect. A beat only lifts a stock if it clears those expectations, not just the published estimate."}
+    },
+    {
+      key:"hft",
+      kicker:"Round 4 of 6",
+      headline:"A thin microcap, and a big order to place",
+      ticker:"TNYC &middot; last <b>$4.75</b> &middot; thinly traded",
+      facts:[
+        "TNYC is a thinly traded microcap. The gap between the buy price and the sell price is wide, a sign of poor liquidity.",
+        "You want to put money to work here, and the business looks genuinely fine.",
+        "High-frequency trading programs constantly watch for large orders arriving in illiquid names like this one."
+      ],
+      position:"<b>Your position:</b> flat. The stock is fine. The real question is how you buy it.",
+      signal:"<b>The tape:</b> barely any shares on offer. A large, aggressive order will have to reach up through many price levels to get filled.",
+      goal:"<b>Goal:</b> get your money in without getting picked off. Watch your size here.",
+      actions:[A_BUY,A_SHORT,A_SIT],
+      path:[100,101,100.5,102,101.5,103],
+      news:["Your order hits a thin book; the algos react in milliseconds.","Fills come back worse than the quote you saw.","The spread stays wide; liquidity is scarce.","The stock grinds higher on light volume.","TNYC finishes up about 3%; your fill decided your P&L."],
+      slippage:{small:0.01, big:0.11},
+      best:["buy"],
+      why:"The stock itself was fine, drifting up about 3% over the week. The damage was self-inflicted. In a thinly traded name a big aggressive market order is easy to spot, and high-frequency trading programs front-ran it, buying ahead and filling you at steadily worse prices. That slippage swamped the small real gain. A small, patient order barely disturbed the market and captured the drift. In illiquid stocks, your own size is the risk.",
+      rightMsg:"You kept your order small and patient, so you captured the drift without the algos picking you off.",
+      wrongMsg:function(a,big){ if(a==="buy"&&big)return "Your big market order lit up the tape and the high-frequency programs front-ran it, so you paid up badly on the fill. In thin names, size is the enemy."; if(a==="short")return "You bet against a perfectly healthy stock for no reason."; return "The stock was a fine buy. Sitting out was overcautious here, though at least you avoided the slippage trap."; },
+      mcq:null
+    },
+    {
+      key:"meme",
+      tag:"You are holding",
+      kicker:"Round 5 of 6 &middot; You are holding",
+      headline:"Your meme winner has gone parabolic",
+      ticker:"MEME &middot; last <b>$340</b> &middot; you are up about +320%",
+      facts:[
+        "You bought MEME last week and it has gone parabolic. You are sitting on a large unrealized gain.",
+        "Short interest is now LOW. The shorts have already covered. The squeeze that drove this has run its course.",
+        "Insiders are selling and the company just announced it will issue millions of new shares into the frenzy.",
+        "Cutting the other way: a boutique analyst just tripled the price target, and the CEO is tweeting that 'the real move hasn't even started.'"
+      ],
+      position:"<b>Your position:</b> long and up about 320%. This gain is only on paper until you sell.",
+      signal:"<b>The tape:</b> volume fading, each new high smaller than the last, and the crowd is already all-in.",
+      goal:"<b>Goal:</b> the rocket already flew. Do not be the last buyer holding the bag.",
+      actions:[A_HOLD,A_SELL,A_SHORT],
+      path:[100,104,88,72,60,55],
+      news:["MEME spikes to a fresh high at the open.","Insiders file to sell and the company announces new shares.","The bid disappears; the price rolls over hard.","Latecomers panic and rush the exit.","MEME crashes about 45% off its high."],
+      best:["sell","short"],
+      why:"The rocket ran out of fuel. Unlike Round 1, short interest here was already low, which means the shorts had covered and the eager buyers were spent. Insiders were selling and the company was printing new shares straight into the frenzy. With no forced buyers left and new supply arriving, the first wobble turned into a stampede for the exit. The brief pop to 104 was the last trap for anyone still chasing. Taking the money was the disciplined call. The tripled price target and the CEO's promise that the move was just starting were the loudest signals here and the least reliable, the kind of hype that tends to peak alongside the price.",
+      rightMsg:"You took the money before the unwind, or faded it outright. Reading an exhausted squeeze is the flip side of Round 1.",
+      wrongMsg:function(a){return "You held a squeeze that had already run, with the shorts gone and insiders selling into it. There were no buyers left, so the gains evaporated.";},
+      mcq:null
+    },
+    {
+      key:"spac",
+      kicker:"Round 6 of 6",
+      headline:"A freshly public SPAC, on lockup-expiry day",
+      ticker:"SPKX &middot; last <b>$9.80</b>",
+      facts:[
+        "SPKX went public through a SPAC. Most investors redeemed for cash before the merger, which drained the trust that was supposed to fund the deal.",
+        "The insider lockup expires today. Early backers and PIPE investors can finally sell.",
+        "There is little real revenue underneath, and few natural buyers in a market this thin."
+      ],
+      position:"<b>Your position:</b> flat. A clean $10 price tag hides a shaky structure.",
+      signal:"<b>The tape:</b> thin liquidity, and a wall of insider stock about to hit a market with almost no one to absorb it.",
+      goal:"<b>Goal:</b> spot the hollow structure and find the exit before the crowd.",
+      actions:[A_BUY,A_SHORT,A_SIT],
+      path:[100,99,95,88,78,70],
+      news:["The insider lockup expires; early-backer shares hit the market.","PIPE investors sell into almost no demand.","With no natural buyers, the price steps steadily lower.","Analysts flag the drained trust and thin revenue.","SPKX bleeds to about $7, down roughly 30%."],
+      best:["short","sit"],
+      why:"The SPAC unwound. Most investors had redeemed for cash, draining the trust, and there was little real business underneath. When the lockup expired, insiders and PIPE investors dumped shares into a market with few natural buyers, and thin liquidity let the price bleed lower day after day. The tidy $10 price was an artifact of the SPAC structure, not a real valuation. Once selling met no demand, price discovery dragged it down to something closer to the shaky fundamentals.",
+      rightMsg:"You read the structure, the drained trust, the expiring lockup, the thin liquidity, and avoided the unwind or profited from it.",
+      wrongMsg:function(a){return "You bought a hollow SPAC on the day its lockup expired, straight into a wave of insider selling and no real buyers. It bled from there.";},
+      mcq:null
+    },
+    {
+      key:"brag",
+      headline:"A loud CEO, a quiet balance sheet",
+      ticker:"HYPR &middot; last <b>$27</b>",
+      facts:[
+        "HYPR's revenue is shrinking and it is burning cash, with a large debt payment due next year.",
+        "Regulatory filings show several insiders have been selling steadily for months.",
+        "The CEO is all over social media promising a 'historic short squeeze' and calling doubters losers. A small boutique firm just published a Strong Buy.",
+        "Short interest is only moderate and volume is ordinary. There is no real catalyst here, just noise."
+      ],
+      position:"<b>Your position:</b> flat. The loudest voice here is the most bullish, and the least credible.",
+      signal:"<b>The tape:</b> plenty of chatter, little actual buying. The confident bull case is coming from people paid to be bullish or selling into it.",
+      goal:"<b>Goal:</b> weigh the signals by credibility, not by volume. Do not mistake a loud voice for a strong hand.",
+      actions:[A_BUY,A_SHORT,A_SIT],
+      path:[100,101,97,90,86,84],
+      news:["HYPR ticks up as the CEO's posts make the rounds.","No real buying shows up behind the hype.","Fresh insider sales print in the filings.","The boutique upgrade gets dismissed as promotional.","HYPR fades to down about 16% as the noise dies out."],
+      best:["short","sit"],
+      why:"The credible signals and the loud one pointed opposite ways, and the loud one lost. A shrinking, cash-burning business with insiders selling is the real information. A CEO promising a squeeze on social media and a boutique Strong Buy are the least reliable sources on the tape, and with only moderate short interest and no genuine catalyst there was no fuel for a real squeeze. When signals conflict, weight them by credibility: filings and cash flows beat slogans.",
+      rightMsg:"You discounted the hype and read the balance sheet and the insider selling. A loud but self-interested signal is usually noise.",
+      wrongMsg:function(a){return a==="buy"?"You bought the CEO's promise over the filings. A shrinking business with insiders selling and no real catalyst does not squeeze because someone loud says it will.":"You sat out a fairly readable fade. The credible signals all pointed down.";},
+      mcq:{q:"The signals conflict: shrinking revenue with insider selling, versus a CEO promising a squeeze online. How should you weight them?",
+        options:[
+          {t:"Trust the verifiable signals (filings, cash flow, insider sales) over the loud, self-interested one.",correct:true},
+          {t:"Follow the loudest, most confident voice, since conviction moves markets.",correct:false},
+          {t:"Average the two and take a middle-sized position.",correct:false}],
+        ok:"Right. Not all signals carry equal weight. Verifiable financials and insider behavior beat a promotional slogan from someone with a reason to talk the stock up.",
+        no:"Weight by credibility, not volume. The CEO's promise and a boutique upgrade are the least reliable inputs; the filings and insider selling are the real read."}
+    },
+    {
+      key:"panic",
+      headline:"An ugly headline, and everyone is selling",
+      ticker:"CNDR &middot; last <b>$61</b> &middot; down 8% on the news",
+      facts:[
+        "CNDR just cut its dividend, and the crowd is dumping the stock on the headline.",
+        "But the company cut the dividend to fund a genuinely high-return expansion, and its balance sheet is strong.",
+        "A respected activist investor disclosed a large new stake the same morning, saying the market misread the move.",
+        "The selling looks like a knee-jerk reaction to the word cut, not to the actual economics."
+      ],
+      position:"<b>Your position:</b> flat. The headline is scary. The question is whether the panic is justified.",
+      signal:"<b>The tape:</b> heavy, emotional selling into the open, then steadier hands quietly buying the dip.",
+      goal:"<b>Goal:</b> look past the scary word and read the real economics. A surprise can cut either way.",
+      actions:[A_BUY,A_SHORT,A_SIT],
+      path:[100,93,91,99,105,109],
+      news:["CNDR gaps down at the open as headline-readers bail.","The selling is loud but thins out fast.","The activist's stake gives buyers cover to step in.","Analysts reframe the cut as a growth investment.","CNDR closes up about 9%, well above where it opened."],
+      best:["buy"],
+      why:"The market did the surprising thing: a scary headline turned into a gain. The crowd sold the word cut without reading why. The dividend was reduced to fund a high-return expansion, the balance sheet was strong, and a credible activist was buying, all signs the reaction was overdone. Once the emotional sellers were out, steadier hands bought the dip and the price recovered past where it started. Not every panic is a gift, but a strong company with a credible buyer on the other side made this one a buy.",
+      rightMsg:"You read past the scary headline to the real economics and bought the overreaction. Sometimes bad-sounding news is good news mispriced.",
+      wrongMsg:function(a){return a==="short"?"You piled onto the panic and shorted a strong company that cut its dividend to grow, with a credible activist buying. The overreaction reversed on you.":"You let a scary word keep you out of a clean overreaction. A strong balance sheet and a credible buyer made the panic a buying chance.";},
+      mcq:null
+    }
+  ];
+
+  // ---------- state ----------
+  var ri=0, reads=0, score=0;
+  var choice={action:null, big:false};
+  var phase="scene";
+  var mcqPending=false;
+  var record=[]; // per round: {title, callLabel, pnl, right}
+  var revealTimer=null;
+
+  function money(x){x=Math.round(x);return (x<0?"−$":"$")+Math.abs(x).toLocaleString();}
+
+  function renderProgress(){
+    var el=$("progress");el.innerHTML="";
+    ROUNDS.forEach(function(_,i){var d=document.createElement("div");d.className="pip"+(i<ri?" done":i===ri?" now":"");el.appendChild(d);});
+    $("rnum").textContent=Math.min(ri+1,ROUNDS.length);
+    $("rtot").textContent=ROUNDS.length;
+    $("reads").textContent=reads;
+    $("score").textContent=money(score);
+    var pw=$("pnlWrap");pw.className=score>0?"pnl-pos":score<0?"pnl-neg":"";
+  }
+
+  function showOnly(id){["welcomePanel","scenePanel","donePanel"].forEach(function(p){$(p).classList[p===id?"remove":"add"]("hidden");});}
+
+  // ---------- scene ----------
+  function renderScene(){
+    var rd=ROUNDS[ri];
+    phase="scene";
+    choice={action:null, big:false};
+    if(revealTimer){clearInterval(revealTimer);revealTimer=null;}
+    renderProgress();
+
+    $("kicker").innerHTML="Round "+(ri+1)+" of "+ROUNDS.length+(rd.tag?" &middot; "+rd.tag:"");
+    $("headline").textContent=rd.headline;
+    $("tickerLine").innerHTML=rd.ticker;
+    var fl=$("facts");fl.innerHTML="";
+    rd.facts.forEach(function(f){var li=document.createElement("li");li.textContent=f;fl.appendChild(li);});
+    $("position").innerHTML=rd.position;
+    $("signal").innerHTML=rd.signal;
+
+    var tut=$("tutorial");
+    if(rd.tutorial){tut.innerHTML=rd.tutorial;tut.classList.remove("hidden");}else{tut.classList.add("hidden");}
+
+    var ex=$("explain");
+    if(ri===0){ex.open=true;}else{ex.open=false;}
+
+    // actions
+    var ar=$("actionrow");ar.innerHTML="";
+    rd.actions.forEach(function(a){
+      var b=document.createElement("button");
+      b.type="button";b.className="act";b.setAttribute("data-a",a.key);
+      b.innerHTML="<span class=\"al\">"+a.label+"</span><span class=\"as\">"+a.sub+"</span>";
+      b.addEventListener("click",function(){selectAction(a.key);});
+      ar.appendChild(b);
+    });
+
+    // conviction default small (re-enable: lockIn disables these each round)
+    setBig(false);
+    $("convSmall").disabled=false;$("convBig").disabled=false;
+    setConvEnabled(false);
+    $("convSmall").classList.add("on");$("convBig").classList.remove("on");
+
+    var yc=$("yourcall");yc.className="yourcall empty";yc.textContent="Pick an action to see the trade-off.";
+
+    // reset chart / news / result / buttons
+    $("chartwrap").classList.add("hidden");
+    $("chart").innerHTML="";
+    var nf=$("newsfeed");nf.innerHTML="";nf.classList.add("hidden");
+    $("resultInline").classList.add("hidden");
+    $("mcqWrap").innerHTML="";$("resultActions").innerHTML="";
+    $("priceNow").textContent="100";$("priceNow").className="cv";
+    $("pnlNow").textContent="$0";$("pnlNow").className="cv";
+    var li=$("lockIn");li.classList.remove("hidden");li.disabled=true;
+
+    showOnly("scenePanel");
+    glossify($("scenePanel"));
+    window.scrollTo(0,0);
+  }
+
+  function setConvEnabled(on){
+    var c=$("conv");
+    if(on){c.classList.remove("muted");$("convNote").textContent=choice.big?"$20,000 at risk":"$10,000 at risk";}
+    else{c.classList.add("muted");$("convNote").textContent="No position, size does not apply";}
+  }
+  function setBig(b){choice.big=b;$("convBig").classList[b?"add":"remove"]("on");$("convSmall").classList[b?"remove":"add"]("on");if(!$("conv").classList.contains("muted"))$("convNote").textContent=b?"$20,000 at risk":"$10,000 at risk";}
+
+  function selectAction(key){
+    if(phase!=="scene")return;
+    choice.action=key;
+    var btns=$("actionrow").querySelectorAll(".act");
+    for(var i=0;i<btns.length;i++)btns[i].classList[btns[i].getAttribute("data-a")===key?"add":"remove"]("sel");
+    var directional=(key==="buy"||key==="short"||key==="hold");
+    setConvEnabled(directional);
+    var yc=$("yourcall");yc.className="yourcall";
+    yc.innerHTML="<b>Your call: </b>"+CALLTEXT[key];
+    $("lockIn").disabled=false;
+  }
+
+  // ---------- reveal ----------
+  function coord(rd,i){
+    var vals=rd.path.slice();vals.push(100);
+    var mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals);
+    if(mx-mn<1){mx=mn+1;}
+    var padx=14, w=320, h=130, top=12, bot=112;
+    var x=padx + i/(rd.path.length-1)*(w-2*padx);
+    var y=bot - (rd.path[i]-mn)/(mx-mn)*(bot-top);
+    return {x:x,y:y,mn:mn,mx:mx,top:top,bot:bot,w:w,padx:padx};
+  }
+  function baseY(rd){
+    var vals=rd.path.slice();vals.push(100);
+    var mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals);if(mx-mn<1){mx=mn+1;}
+    var top=12,bot=112;return bot-(100-mn)/(mx-mn)*(bot-top);
+  }
+  function drawChart(rd,upTo){
+    var svg=$("chart");
+    var pts="";
+    for(var i=0;i<=upTo;i++){var c=coord(rd,i);pts+=(i?" ":"")+c.x.toFixed(1)+","+c.y.toFixed(1);}
+    var last=coord(rd,upTo);
+    var by=baseY(rd);
+    var up = rd.path[upTo] >= 100;
+    var col = up ? "var(--up)" : "var(--down)";
+    var html="";
+    html+="<line class=\"base\" x1=\"14\" y1=\""+by.toFixed(1)+"\" x2=\"306\" y2=\""+by.toFixed(1)+"\"></line>";
+    html+="<text class=\"dlabel\" x=\"8\" y=\""+(by-3).toFixed(1)+"\">entry 100</text>";
+    html+="<polyline class=\"pl\" style=\"stroke:"+col+"\" points=\""+pts+"\"></polyline>";
+    html+="<circle class=\"dot\" cx=\""+last.x.toFixed(1)+"\" cy=\""+last.y.toFixed(1)+"\" r=\"4\" style=\"fill:"+col+"\"></circle>";
+    for(var d=0;d<rd.path.length;d++){var cc=coord(rd,d);html+="<text class=\"dlabel\" text-anchor=\"middle\" x=\""+cc.x.toFixed(1)+"\" y=\"124\">"+(d===0?"now":"d"+d)+"</text>";}
+    svg.innerHTML=html;
+    // labels
+    var priceIdx=rd.path[upTo];
+    var pn=$("priceNow");pn.textContent=priceIdx.toFixed(1);pn.className="cv "+(priceIdx>=100?"up":"down");
+    var pl=mtm(rd,choice.action,choice.big,priceIdx);
+    var pe=$("pnlNow");pe.textContent=money(pl);pe.className="cv "+(pl>0?"up":pl<0?"down":"");
+  }
+
+  function pushNews(rd,i){
+    if(!rd.news||i<1||i>rd.news.length)return;
+    var nf=$("newsfeed");
+    var d=document.createElement("div");d.className="nh";
+    d.innerHTML="<span class=\"nd\">Day "+i+"</span>"+rd.news[i-1];
+    nf.appendChild(d);
+  }
+  function lockIn(){
+    if(phase!=="scene"||choice.action==null)return;
+    var rd=ROUNDS[ri];
+    phase="reveal";
+    // freeze inputs
+    $("lockIn").disabled=true;$("lockIn").classList.add("hidden");
+    var btns=$("actionrow").querySelectorAll(".act");for(var i=0;i<btns.length;i++)btns[i].disabled=true;
+    $("convSmall").disabled=true;$("convBig").disabled=true;$("conv").classList.add("muted");
+    $("chartwrap").classList.remove("hidden");
+    var nf=$("newsfeed");nf.innerHTML="";nf.classList.remove("hidden");
+    if(rd.news&&rd.news.length){var hd=document.createElement("div");hd.className="nhh";hd.textContent="On the tape";nf.appendChild(hd);}
+    drawChart(rd,0);
+
+    if(reduce){
+      drawChart(rd,rd.path.length-1);
+      for(var k=1;k<rd.path.length;k++)pushNews(rd,k);
+      finishReveal();
+      return;
+    }
+    var step=1;
+    revealTimer=setInterval(function(){
+      drawChart(rd,step);
+      pushNews(rd,step);
+      step++;
+      if(step>=rd.path.length){clearInterval(revealTimer);revealTimer=null;finishReveal();}
+    },560);
+  }
+  function finishReveal(){
+    phase="revealed";
+    goResult();
+  }
+
+  // ---------- result ----------
+  function flashMcq(){
+    var box=$("mcqWrap").querySelector(".mcq");
+    if(!box)return;
+    if(box.scrollIntoView)box.scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"});
+    box.classList.remove("flash");void box.offsetWidth;box.classList.add("flash");
+    setTimeout(function(){box.classList.remove("flash");},900);
+  }
+  function goResult(){
+    if(phase!=="revealed")return;
+    phase="result";
+    var rd=ROUNDS[ri];
+    var pnl=settledPnl(rd,choice.action,choice.big);
+    var right=isRight(rd,choice.action,choice.big);
+    var st=statusOf(rd,choice.action,choice.big);
+
+    // commit score once
+    score+=pnl;
+    if(right)reads++;
+    var actObj=null;rd.actions.forEach(function(a){if(a.key===choice.action)actObj=a;});
+    var callLabel=(actObj?actObj.label:choice.action);
+    if(choice.action==="buy"||choice.action==="short"||choice.action==="hold")callLabel+=" ("+(choice.big?"Big":"Small")+")";
+    record.push({title:rd.headline,callLabel:callLabel,pnl:pnl,right:right});
+
+    var box=$("resultBox");box.className="result "+st;
+    var titles={win:"Good read. The tape paid you.",lose:"That one cost you.",safe:"Disciplined. You protected your capital.",miss:"You read it too cautiously."};
+    $("rtitle").textContent=titles[st];
+    $("rpnl").innerHTML="This round: <b>"+money(pnl)+"</b>"+(right?"  &middot;  correct read":"  &middot;  missed read");
+    $("why").innerHTML="<span class=\"wt\">Why it moved</span>"+rd.why;
+
+    var coachMsg;
+    if(right)coachMsg=rd.rightMsg;
+    else coachMsg=(typeof rd.wrongMsg==="function")?rd.wrongMsg(choice.action,choice.big):rd.wrongMsg;
+    $("coach").innerHTML="<b>Coach: </b>"+coachMsg;
+
+    renderMcq(rd);
+
+    var acts=$("resultActions");acts.innerHTML="";
+    mcqPending=!!rd.mcq;
+    var b=document.createElement("button");b.className="go"+(mcqPending?" needs-mcq":"");
+    b.textContent=(ri>=ROUNDS.length-1)?"See my result":"Next round";
+    b.addEventListener("click",function(){if(mcqPending){flashMcq();return;}nextRound();});
+    acts.appendChild(b);
+    if(mcqPending){var mh=document.createElement("span");mh.className="mcqhint";mh.id="mcqHint";mh.textContent="Answer the quick check above to continue.";acts.appendChild(mh);}
+
+    renderProgress();
+    $("resultInline").classList.remove("hidden");
+    glossify($("resultInline"));
+    var rb=$("resultBox");if(rb.scrollIntoView)rb.scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"});
+    b.focus();
+  }
+
+  function renderMcq(rd){
+    var w=$("mcqWrap");w.innerHTML="";
+    if(!rd.mcq)return;
+    var m=rd.mcq;
+    var box=document.createElement("div");box.className="mcq";box.setAttribute("data-done","");
+    var q=document.createElement("div");q.className="mcqq";
+    q.innerHTML="<span class=\"qk\">Quick check</span>"+m.q;
+    box.appendChild(q);
+    var ops=document.createElement("div");ops.className="mcqops";
+    var fb=document.createElement("div");fb.className="mcqfb";
+    m.options.forEach(function(op){
+      var b=document.createElement("button");b.type="button";b.className="mcqop";b.textContent=op.t;
+      b.addEventListener("click",function(){
+        if(box.getAttribute("data-done"))return;
+        box.setAttribute("data-done","1");
+        mcqPending=false;box.classList.remove("flash");
+        var nb=$("resultActions").querySelector(".go");if(nb)nb.classList.remove("needs-mcq");
+        var mh=$("mcqHint");if(mh&&mh.parentNode)mh.parentNode.removeChild(mh);
+        var all=ops.querySelectorAll(".mcqop");
+        for(var i=0;i<all.length;i++)all[i].disabled=true;
+        if(op.correct){b.classList.add("correct");fb.className="mcqfb ok";fb.innerHTML="<b>Correct. </b>"+m.ok;}
+        else{b.classList.add("wrong");fb.className="mcqfb no";fb.innerHTML="<b>Not quite. </b>"+m.no;
+          for(var j=0;j<m.options.length;j++){if(m.options[j].correct)all[j].classList.add("correct");}}
+      });
+      ops.appendChild(b);
+    });
+    box.appendChild(ops);box.appendChild(fb);
+    w.appendChild(box);
+  }
+
+  function nextRound(){
+    ri++;
+    if(ri>=ROUNDS.length){showDone();return;}
+    renderScene();
+  }
+
+  // ---------- done ----------
+  function rankFor(r){
+    if(r>=8)return "Tape Reader";
+    if(r>=6)return "Sharp Trader";
+    if(r>=4)return "Solid Desk Hand";
+    if(r>=2)return "Still Learning the Tape";
+    return "Back to the Training Desk";
+  }
+  function showDone(){
+    ri=ROUNDS.length;
+    renderProgress();
+    $("rnum").textContent=ROUNDS.length;
+    $("rank").textContent=rankFor(reads);
+    $("doneReads").textContent=reads+" / "+ROUNDS.length;
+    var dp=$("donePnl");dp.textContent=money(score);dp.style.color=score>0?"var(--up)":score<0?"var(--down)":"var(--ink)";
+    var sc=$("scorecard");sc.innerHTML="";
+    record.forEach(function(r,i){
+      var li=document.createElement("li");
+      li.innerHTML="<span class=\"cn\">Round "+(i+1)+": <b>"+r.callLabel+"</b> "+(r.right?"(read it right)":"(misread)")+"</span>"+
+        "<span class=\"rr "+(r.pnl>=0?"good":"bad")+"\">"+money(r.pnl)+"</span>";
+      sc.appendChild(li);
+    });
+    showOnly("donePanel");
+    window.scrollTo(0,0);
+  }
+
+  function resetGame(){ri=0;reads=0;score=0;record=[];renderScene();}
+
+  // ---------- wire ----------
+  $("startGame").addEventListener("click",function(){resetGame();});
+  $("convSmall").addEventListener("click",function(){if(phase==="scene"&&!$("conv").classList.contains("muted"))setBig(false);});
+  $("convBig").addEventListener("click",function(){if(phase==="scene"&&!$("conv").classList.contains("muted"))setBig(true);});
+  $("lockIn").addEventListener("click",lockIn);
+  $("playAgain").addEventListener("click",function(){resetGame();});
+
+  renderProgress();
+  glossify($("welcomePanel"));
+})();
+</script>
+
+</body>
+</html>
